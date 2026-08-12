@@ -1,5 +1,0 @@
-Bu projeyi geliştirirken bazı yorumlarda ve mesajlarda Mark-XXXV projesinin sahibi @fatihmakes ile benzerlik olduğu belirtildi. Durumu netleştirmek için Fatih ile doğrudan iletişime geçtim.
-
-Sonuç olarak UI tasarımlarımız arasında benzerlik olduğu ortaya çıktı, ancak kod tarafında ikimiz de birbirinden oldukça farklı yönlere gitmiş. Bu projeyi global çapta ilk hayata geçirenlerden biri olan Fatih'i mutlaka takip etmenizi öneririm → @fatihmakes
-
-Açık kaynak paylaşımı ve anlayışlı yaklaşımı için kendisine ayrıca teşekkürler. 🙏
