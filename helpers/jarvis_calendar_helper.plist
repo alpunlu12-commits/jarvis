@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleIdentifier</key>
+    <string>com.jarvis.calendarhelper</string>
+    <key>CFBundleName</key>
+    <string>JARVIS Calendar Helper</string>
+    <key>CFBundleDisplayName</key>
+    <string>JARVIS Calendar Helper</string>
+    <key>CFBundleExecutable</key>
+    <string>jarvis-calendar-helper</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+    <key>LSUIElement</key>
+    <true/>
+    <key>NSCalendarsFullAccessUsageDescription</key>
+    <string>JARVIS takvim etkinliklerini okuyup gunluk ajandani ozetlemek istiyor.</string>
+    <key>NSCalendarsUsageDescription</key>
+    <string>JARVIS takvim etkinliklerini okuyup gunluk ajandani ozetlemek istiyor.</string>
+    <key>NSRemindersFullAccessUsageDescription</key>
+    <string>JARVIS animsaticilarini okuyup yeni animsatici eklemek istiyor.</string>
+    <key>NSRemindersUsageDescription</key>
+    <string>JARVIS animsaticilarini okuyup yeni animsatici eklemek istiyor.</string>
+</dict>
+</plist>
