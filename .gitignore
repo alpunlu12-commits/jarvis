@@ -1,0 +1,12 @@
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+.vscode/
+.claude/
+.swift-cache/
+.swift-home/
+
+config/api_keys.json
+memory/memory.json
+memory/phone_book.json

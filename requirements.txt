@@ -1,0 +1,10 @@
+# JARVIS Kali Linux - Python paketleri
+google-genai
+SpeechRecognition
+pyaudio
+psutil
+Pillow
+requests
+PyAutoGUI
+pyperclip
+gTTS
