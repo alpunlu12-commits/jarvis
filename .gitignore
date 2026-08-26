@@ -1,0 +1,41 @@
+# ═══════════════════════════════════════════════════════════════════════════
+#  JARVIS — .gitignore
+# ═══════════════════════════════════════════════════════════════════════════
+
+# API anahtarları (GÜVENLİK!)
+config/api_keys.json
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual env
+venv/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Geçici dosyalar
+*.tmp
+*.log
+*.bak
+
+# Memory (kişisel veri)
+memory/phone_book.json

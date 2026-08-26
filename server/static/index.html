@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0a0a10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>JARVIS</title>
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiSkFSVklTIiwic2hvcnRfbmFtZSI6IkpBUlZJUyIsInN0YXJ0X3VybCI6Ii8iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjMGEwYTEwIiwidGhlbWVfY29sb3IiOiIjMGEwYTEwIn0=">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a10;--panel:#0f1018;--border:#1a2a2a;
+  --pri:#00d4c0;--pri-dim:#007a6e;--green:#00ff88;
+  --accent:#4488ff;--red:#ff3344;--gold:#ffcc00;
+  --text:#d0e8e6;--text-dim:#5a7a78;--input-bg:#0c0c14;
+}
+html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);-webkit-tap-highlight-color:transparent}
+body{display:flex;flex-direction:column;height:100dvh}
+
+/* ── Header ─────────────────────────────────── */
+.header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px;background:var(--panel);border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.header h1{font-size:18px;font-weight:600;color:var(--pri);letter-spacing:1px}
+.status-dot{
+  width:10px;height:10px;border-radius:50%;
+  background:var(--red);transition:background .3s;
+}
+.status-dot.connected{background:var(--green);box-shadow:0 0 8px var(--green)}
+.status-dot.connecting{background:var(--gold);animation:pulse 1s infinite}
+
+/* ── HUD Rings ──────────────────────────────── */
+.hud{
+  display:flex;align-items:center;justify-content:center;
+  padding:12px 0;flex-shrink:0;position:relative;
+}
+.ring{
+  position:absolute;border-radius:50%;border:1.5px solid;
+  opacity:.15;
+}
+.ring-1{width:90px;height:90px;border-color:var(--pri);animation:spin 12s linear infinite}
+.ring-2{width:110px;height:110px;border-color:var(--pri-dim);animation:spin 18s linear infinite reverse}
+.ring-3{width:130px;height:130px;border-color:var(--border);animation:spin 25s linear infinite}
+.ring::after{
+  content:'';position:absolute;width:6px;height:6px;border-radius:50%;
+  background:var(--pri);top:-3px;left:50%;transform:translateX(-50%);
+}
+.ring-2::after{background:var(--pri-dim)}
+.ring-3::after{background:var(--text-dim);width:4px;height:4px;top:-2px}
+
+.hud-center{
+  position:relative;z-index:1;text-align:center;
+}
+.hud-label{font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:2px}
+.hud-state{font-size:14px;color:var(--pri);font-weight:600;margin-top:2px}
+
+/* ── Chat Log ───────────────────────────────── */
+.chat{
+  flex:1;overflow-y:auto;padding:8px 12px;
+  display:flex;flex-direction:column;gap:6px;
+  scroll-behavior:smooth;-webkit-overflow-scrolling:touch;
+}
+.msg{
+  max-width:85%;padding:8px 12px;border-radius:12px;
+  font-size:14px;line-height:1.4;word-break:break-word;
+  animation:fadeIn .15s ease;
+}
+.msg.user{
+  align-self:flex-end;background:var(--pri-dim);color:#fff;
+  border-bottom-right-radius:4px;
+}
+.msg.jarvis{
+  align-self:flex-start;background:var(--panel);border:1px solid var(--border);
+  border-bottom-left-radius:4px;color:var(--text);
+}
+.msg.error{
+  align-self:center;background:rgba(255,51,68,.12);border:1px solid var(--red);
+  color:var(--red);font-size:12px;
+}
+.msg.sys{
+  align-self:center;color:var(--text-dim);font-size:11px;
+  padding:4px 0;
+}
+
+/* ── Input ──────────────────────────────────── */
+.input-bar{
+  display:flex;gap:8px;padding:10px 12px;
+  padding-bottom:calc(10px + env(safe-area-inset-bottom));
+  background:var(--panel);border-top:1px solid var(--border);flex-shrink:0;
+}
+.input-bar input{
+  flex:1;background:var(--input-bg);border:1px solid var(--border);
+  border-radius:20px;padding:10px 16px;color:var(--text);font-size:15px;
+  outline:none;transition:border-color .2s;
+}
+.input-bar input:focus{border-color:var(--pri)}
+.input-bar input::placeholder{color:var(--text-dim)}
+.input-bar button{
+  width:42px;height:42px;border-radius:50%;border:none;
+  background:var(--pri);color:var(--bg);font-size:18px;font-weight:700;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:transform .1s,opacity .2s;flex-shrink:0;
+}
+.input-bar button:active{transform:scale(.9)}
+.input-bar button:disabled{opacity:.4;cursor:not-allowed}
+
+/* ── Animations ─────────────────────────────── */
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Scrollbar ──────────────────────────────── */
+.chat::-webkit-scrollbar{width:4px}
+.chat::-webkit-scrollbar-track{background:transparent}
+.chat::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+/* ── Offline Banner ─────────────────────────── */
+.offline-banner{
+  display:none;text-align:center;padding:6px;
+  background:rgba(255,51,68,.15);color:var(--red);font-size:12px;
+}
+.offline-banner.show{display:block}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>JARVIS</h1>
+  <div class="status-dot" id="statusDot" title="Baglanti durumu"></div>
+</div>
+
+<div class="hud">
+  <div class="ring ring-1"></div>
+  <div class="ring ring-2"></div>
+  <div class="ring ring-3"></div>
+  <div class="hud-center">
+    <div class="hud-label" id="hudLabel">JARVIS</div>
+    <div class="hud-state" id="hudState">BAGLANIYOR</div>
+  </div>
+</div>
+
+<div class="offline-banner" id="offlineBanner">WebSocket baglantisi kesildi — HTTP fallback aktif</div>
+
+<div class="chat" id="chat"></div>
+
+<div class="input-bar">
+  <input type="text" id="cmdInput" placeholder="Komut yazin..." autocomplete="off" enterkeyhint="send">
+  <button id="sendBtn" aria-label="Gonder">&#9654;</button>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  // ── Config ──────────────────────────────────
+  var params = new URLSearchParams(location.search);
+  var TOKEN = params.get('token') || '';
+  var WS_URL = 'ws://' + location.host + '/ws?token=' + encodeURIComponent(TOKEN);
+  var HTTP_CMD = location.origin + '/api/command';
+  var RECONNECT_DELAY = 2000;
+  var MAX_RECONNECT = 30000;
+
+  // ── Elements ────────────────────────────────
+  var chatEl = document.getElementById('chat');
+  var inputEl = document.getElementById('cmdInput');
+  var sendBtn = document.getElementById('sendBtn');
+  var statusDot = document.getElementById('statusDot');
+  var hudState = document.getElementById('hudState');
+  var offlineBanner = document.getElementById('offlineBanner');
+
+  // ── State ───────────────────────────────────
+  var ws = null;
+  var reconnectDelay = RECONNECT_DELAY;
+  var useFallback = false;
+  var pendingResolve = null;
+
+  // ── Token check ─────────────────────────────
+  if (!TOKEN) {
+    addMsg('sys', 'Token bulunamadi. URL参数 ?token= ile baglanin.');
+    setHud('HATA', 'var(--red)');
+    return;
+  }
+
+  // ── WebSocket ───────────────────────────────
+  function connect() {
+    if (ws && (ws.readyState === 0 || ws.readyState === 1)) return;
+
+    setHud('BAGLANIYOR', 'var(--gold)');
+    statusDot.className = 'status-dot connecting';
+
+    try {
+      ws = new WebSocket(WS_URL);
+    } catch(e) {
+      onWsError(e);
+      return;
+    }
+
+    ws.onopen = function() {
+      reconnectDelay = RECONNECT_DELAY;
+      statusDot.className = 'status-dot connected';
+      setHud('DINLENIYOR', 'var(--green)');
+      offlineBanner.className = 'offline-banner';
+      useFallback = false;
+      addMsg('sys', 'Baglandi.');
+    };
+
+    ws.onmessage = function(evt) {
+      var data;
+      try { data = JSON.parse(evt.data); } catch(e) { return; }
+
+      if (data.ok === true) {
+        addMsg('jarvis', data.result || 'Tamam.');
+      } else if (data.ok === false) {
+        addMsg('error', data.error || 'Hata olustu.');
+      }
+      setHud('DINLENIYOR', 'var(--green)');
+    };
+
+    ws.onclose = function() {
+      statusDot.className = 'status-dot';
+      setHud('KOPTU', 'var(--red)');
+      scheduleReconnect();
+    };
+
+    ws.onerror = function(e) {
+      onWsError(e);
+    };
+  }
+
+  function onWsError() {
+    // WebSocket basarisiz → HTTP fallback
+    useFallback = true;
+    offlineBanner.className = 'offline-banner show';
+    statusDot.className = 'status-dot';
+    setHud('HTTP FALLBACK', 'var(--gold)');
+    scheduleReconnect();
+  }
+
+  function scheduleReconnect() {
+    setTimeout(function() {
+      reconnectDelay = Math.min(reconnectDelay * 1.5, MAX_RECONNECT);
+      connect();
+    }, reconnectDelay);
+  }
+
+  // ── Send Command ────────────────────────────
+  function sendCommand(text) {
+    text = (text || '').trim();
+    if (!text) return;
+
+    addMsg('user', text);
+    inputEl.value = '';
+    setHud('DUSUNUYOR', 'var(--gold)');
+
+    if (useFallback || !ws || ws.readyState !== 1) {
+      // HTTP fallback
+      httpSend(text);
+    } else {
+      try {
+        ws.send(text);
+      } catch(e) {
+        httpSend(text);
+      }
+    }
+  }
+
+  function httpSend(text) {
+    fetch(HTTP_CMD, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({token: TOKEN, text: text})
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      if (d.ok) {
+        addMsg('jarvis', d.result || 'Tamam.');
+      } else {
+        addMsg('error', d.error || 'Hata.');
+      }
+      setHud('DINLENIYOR', 'var(--green)');
+    })
+    .catch(function(e){
+      addMsg('error', 'HTTP hatasi: ' + e.message);
+      setHud('HATA', 'var(--red)');
+    });
+  }
+
+  // ── UI Helpers ──────────────────────────────
+  function addMsg(type, text) {
+    var el = document.createElement('div');
+    el.className = 'msg ' + type;
+    el.textContent = text;
+    chatEl.appendChild(el);
+
+    // Limit — son 100 mesaj
+    while (chatEl.children.length > 100) {
+      chatEl.removeChild(chatEl.firstChild);
+    }
+    chatEl.scrollTop = chatEl.scrollHeight;
+  }
+
+  function setHud(text, color) {
+    hudState.textContent = text;
+    if (color) hudState.style.color = color;
+  }
+
+  // ── Event Listeners ─────────────────────────
+  sendBtn.addEventListener('click', function() {
+    sendCommand(inputEl.value);
+  });
+
+  inputEl.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendCommand(inputEl.value);
+    }
+  });
+
+  // ── Init ────────────────────────────────────
+  addMsg('sys', 'JARVIS Phone Control v1.0');
+  connect();
+
+})();
+</script>
+</body>
+</html>
