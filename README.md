@@ -14,7 +14,7 @@ JARVIS kuruluysa yeni sürümleri kendisi bulur: **Ayarlar › HAKKINDA › GÜN
 
 ## Başlarken
 
-1. JARVIS'i kur ve aç.
+1. JARVIS'i kur ve aç: [kurulum videosu](https://youtu.be/ngODHC-iIf8)
 2. Ücretsiz Gemini API anahtarını al ve yapıştır: [anahtar nasıl alınır (video)](https://youtu.be/VZl5uBT4a60)
 3. Konuşmaya başla.
 
