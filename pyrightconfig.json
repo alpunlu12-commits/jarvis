@@ -1,0 +1,13 @@
+{
+    "typeCheckingMode": "off",
+    "venvPath": ".",
+    "venv": "venv",
+    "extraPaths": [
+        "venv/lib/python3.14/site-packages"
+    ],
+    "reportAttributeAccessIssue": "none",
+    "reportArgumentType": "none",
+    "reportMissingImports": "none",
+    "reportMissingModuleSource": "none",
+    "reportOptionalMemberAccess": "none"
+}
