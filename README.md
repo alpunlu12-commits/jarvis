@@ -37,5 +37,5 @@ Aynı asistan telefonunda: [App Store'dan indir](https://apps.apple.com/tr/app/i
 
 ## Eski sürümler
 
-- V1–V3 (açık kaynak, Python): [Eski Sürümler (Açık Kaynak)](<Eski Sürümler (Açık Kaynak)>) klasöründe.
+- V1–V3 (açık kaynak, Python; ticari olmayan kullanım, [PolyForm Noncommercial 1.0.0](<Eski Sürümler (Açık Kaynak)/LICENSE.md>)): [Eski Sürümler (Açık Kaynak)](<Eski Sürümler (Açık Kaynak)>) klasöründe.
 - Eski V4 sürümleri: [Sürümler](https://github.com/alpunlu12-commits/jarvis/releases) sayfasında.
